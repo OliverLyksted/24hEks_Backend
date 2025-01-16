@@ -32,6 +32,10 @@ public class Drone {
     @OneToMany(mappedBy = "drone", cascade = CascadeType.ALL)  // TODO: undersøg mappedby
     private List<Delivery> deliveries;
 
+    public void setDeliveries(List<Delivery> deliveries) {
+        this.deliveries = deliveries;
+    }
+
     public Long getDrone_id() {
         return drone_id;
     }

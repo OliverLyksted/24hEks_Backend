@@ -80,30 +80,24 @@ public class DeliveryController {
     }
 
     @PostMapping("/schedule")
-    public void scheduleDelivery(Long drone_id) {
+    public void scheduleDelivery(Long delivery_id) {
+        Optional<Delivery> optionalDelivery = deliveryRepository.findById(delivery_id);
+        if (optionalDelivery.isPresent()) {
+            Delivery delivery = optionalDelivery.get();
 
-        try {
-            List<Delivery> deliveriesWithNoDrones = getQueue();
-            Delivery delivery = deliveriesWithNoDrones.get(0);
+            if (delivery.getDrone() == null)
+            {
+                List<Drone> drones = droneRepository.findAll();
 
-            Optional<Drone> optionalDrone = droneRepository.findById(drone_id);
-            if (optionalDrone.isPresent()) {
-                Drone drone = optionalDrone.get();
-                if (drone.hasNoDeliveries()) {
-                    delivery.setDrone(drone);
-                    deliveryRepository.save(delivery);
-                } else {
-                    // TODO: her mangler logik, hvis en drone er igang med en levering
+                for (Drone drone : drones) {
+                    if (drone.hasNoDeliveries()) {
+                        delivery.setDrone(drone);
+                        deliveryRepository.save(delivery);
+                        break;
+                    }
                 }
-
             }
-
-        } catch (IndexOutOfBoundsException e) {
-            // NoSuchElementException smides når der ikke findes en delivery i deliveriesWithNoDrones.
-            // TODO: Overvej exception håndtering.
         }
-
-
     }
 
 
