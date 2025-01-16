@@ -61,8 +61,7 @@ public class DeliveryController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Pizza_id findes ikke.");
         }
     }
-
-
+    
     @GetMapping("/queue")
     public List<Delivery> getQueue() {
 
